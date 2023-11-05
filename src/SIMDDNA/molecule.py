@@ -39,12 +39,22 @@ class Molecule:
     def addToChain(self, base, chainId):
         self.chains[chainId].append(base)
 
+    def getChain(self, chain):
+        return self.chains[chain]
+
+    def removeChain(self, chainId):
+        del self.chains[chainId]
+
     def maxChainSize(self):
         maxLen = 0
         for chain in self.chains:
             maxLen = max(maxLen, len(chain))
 
         return maxLen
+
+    def chain2chain(self, chainID, chain):
+        for base in chain:
+            self.chains[chainID].append(base)
     
     def padChain(self, chainID, count):
         for _ in range(count):
@@ -114,11 +124,11 @@ def parse(notationStr):
 
         if state == "init":
             
-            if   char == "<":
+            if   char == "{":
                 lastChain = state = "lower"
             elif char == "[":
                 lastChain = state = "double"
-            elif char == "{":
+            elif char == "<":
                 lastChain = state = "upper"
             elif char == ".":
                 if lastChain is not None and lastChain != "lower":
@@ -131,14 +141,14 @@ def parse(notationStr):
                 exit(1)
 
         elif state == "lower":
-            if char == ">":
+            if char == "}":
                 state = "init"
                 continue
 
             newMolecule.charAddBase(lowerChain, char)
 
         elif state == "upper":
-            if char == "}":
+            if char == ">":
                 workingChain = None
                 isBackward   = False
                 state        = "init"
