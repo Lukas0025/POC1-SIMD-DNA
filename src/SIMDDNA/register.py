@@ -146,35 +146,35 @@ myreg.inscription([
     molecule.parse("{D*E*A*F*}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")
 
 myreg.inscription([
     molecule.parse("{D*E*A*B*C*G*}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")
 
 myreg.inscription([
     molecule.parse("{DEABCG}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")
 
 myreg.inscription([
     molecule.parse("{A*B*C*}"),
     molecule.parse("{D*E*}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")
 
 myreg.inscription([
     molecule.parse("{DEAF}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")
 
 myreg.inscription([
     molecule.parse("{B*C*D*E*}")
 ])
 
-myreg.asciiShow("")
+myreg.asciiShow(" ")

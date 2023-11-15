@@ -100,3 +100,13 @@ def showMolecule(molecule, spacing = ""):
 
     for line in reversed(Invlines):
         print(spacing.join(line))
+
+    # print bases in bottom
+    label = []
+    for i in range(len(molecule)):
+        if (molecule.getBase(0, i) != nothing):
+            label.append(molecule.getBase(0, i) + spacing)
+        else:
+            label.append(" " + spacing)
+
+    print("".join(label))
