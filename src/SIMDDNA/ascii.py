@@ -8,7 +8,9 @@ def toBindingLen(chainID, curPOS, molecule):
     for basePos in range(curPOS, len(molecule)):
         if molecule.getBase(chainID, basePos) != nothing:
             if isComplementary(molecule.getBase(chainID, basePos), molecule.getBase(0, basePos)):
-                return toBLen
+                #if only this binded here
+                if molecule.bindedCountAt(basePos) == 1:
+                    return toBLen
             
         toBLen += 1
 
@@ -18,7 +20,8 @@ def toBindingLen(chainID, curPOS, molecule):
     for basePos in range(curPOS, -1, -1):
         if molecule.getBase(chainID, basePos) != nothing:
             if isComplementary(molecule.getBase(chainID, basePos), molecule.getBase(0, basePos)):
-                return toBLen
+                if molecule.bindedCountAt(basePos) == 1:
+                    return toBLen
             
         toBLen -= 1
 
@@ -50,10 +53,8 @@ def showMolecule(molecule, spacing = ""):
 
             if lenToBinding is None:
                 print(f"Warning: no binded for chain {chainID}")
+
             elif lenToBinding == 0:
-                if bounded:
-                    print(f"Warning: two or more posible bindings on base {basePos}")
-                    
                 bounded     = True
                     
                 Invlines[1] += "|"

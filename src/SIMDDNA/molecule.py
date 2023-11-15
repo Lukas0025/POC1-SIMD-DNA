@@ -84,6 +84,14 @@ class Molecule:
     def getBase(self, chainID, baseID):
         return self.chains[chainID][baseID]
     
+    def bindedCountAt(self, baseID):
+        binding = 0
+        for chain in self.chains:
+            if isComplementary(self.chains[0][baseID], chain[baseID]):
+                binding += 1
+
+        return binding
+    
     def charAddBase(self, chainID, char, isBackward = False):
         if isBackward:
             if len(self.chains[chainID]) == 0 or self.getBase(chainID, 0) != nothing:
