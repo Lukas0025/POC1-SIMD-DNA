@@ -3,8 +3,8 @@
 # @autor Lukáš Plevač <xpleva07@vutbr.cz>
 # @brief implments REGISTER from SIMD|DNA
 
-import molecule
-import ascii
+from . import molecule
+from . import ascii
 
 class Register:
     ##
@@ -125,11 +125,11 @@ class Register:
                 for pos in range(len(self.mol)):
                     if molecule.isComplementary(self.mol.getBase(chainI, pos), self.mol.getBase(0, pos)) and self.mol.bindedCountAt(pos) == 1: # binde minimaly once
                         bindScore += 1
-                    else:
-                        bindScore = 0
-                        finalBindScore = max(finalBindScore, bindScore)
+                    elif not molecule.isComplementary(self.mol.getBase(chainI, pos), self.mol.getBase(0, pos)):
+                        finalBindScore = max(bindScore, finalBindScore)
+                        bindScore      = 0
 
-                if finalBindScore < 2:
+                if max(bindScore, finalBindScore) < 2:
                     self.mol.removeChain(chainI)
                     done = False
                     break

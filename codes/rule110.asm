@@ -9,6 +9,6 @@ instructions:
     {D*E*A*F*}      # mark 01
     {D*E*A*B*C*G*}  # mark 11
     {DEABCG}        # remove mark 11
-    {A*B*C*} {D*E*} # write 0
+    {A*B*C*}{D*E*}  # write 0
     {DEAF}          # remove mark 01
     {B*C*D*E*}      # write 1

@@ -1,48 +1,72 @@
+#!/usr/bin/env python3
 
 from SIMDDNA.register import Register
-from SIMDDNA          import molecule
 from SIMDDNA.assembly import Assembly
+from SIMDDNA.ascii    import showMolecule
+import argparse
 
-asm = Assembly(
-"""
-define:
-    0 [ABC][DE]
-    1 {A}[BCDE]
+parser = argparse.ArgumentParser(description='DNA|SIMD python simulator POC1')
+parser.add_argument('assembly')
+parser.add_argument('-s', '--spaceing', default=" ", help='space sentense between ascii char of DNA strands')
+parser.add_argument('-v', '--verbose', help='show simulation step by step not only final', action='store_true', default=False)
+parser.add_argument('-d', '--decode', help='use macros to decode final result', action='store_true', default=False)
 
-data:
-    1001111010
+args = parser.parse_args()
 
-instructions:
-    {D*E*A*F*}      # mark 01
-    {D*E*A*B*C*G*}  # mark 11
-    {DEABCG}        # remove mark 11
-    {A*B*C*} {D*E*} # write 0
-    {DEAF}          # remove mark 01
-    {B*C*D*E*}      # write 1
-"""
-)
+# Open a file
+file = open(args.assembly, mode='r')
+asm = file.read()
+file.close()
+
+asm = Assembly(asm)
 
 print("=================================")
 print("|         Inital state          |")
 print("=================================")
-print("\n")
+print("")
 
 regs = []
 
 for data in asm.getData():
-    regs.append(Register(molecule.parse(data)))
-    regs[-1].asciiShow(spaceing = " ")
+    regs.append(Register(data))
+    regs[-1].asciiShow(spaceing = args.spaceing)
 
 
 iId = 0
 for ins in asm.getInstructions():
-    print("=================================")
-    print(f"|        Instruction {iId}         |")
-    print("=================================")
-    print("\n")
+
+    if args.verbose:
+        print("")
+        print("=================================")
+        print(f"|        Instruction {iId}         |")
+        print("=================================")
+        print()
+
+        for insc in ins:
+            insc.rawPrint()
+
+        print()
+        print("Registers")
+        print("--------------------------------")
+        print()
 
     for reg in regs:
         reg.instruction(ins)
-        reg.asciiShow(spaceing = " ")
+        
+        if args.verbose:
+            reg.asciiShow(spaceing = args.spaceing)
 
     iId += 1
+
+print("")
+print("=================================")
+print("|          FINAL state          |")
+print("=================================")
+print("")
+
+for reg in regs:
+    reg.asciiShow(spaceing = args.spaceing)
+
+if args.decode:
+    # todo: implement it
+    pass

@@ -3,8 +3,8 @@
 # @autor Lukáš Plevač <xpleva07@vutbr.cz>
 # @brief defines function from print structions in ASCII reprezentation
 
-from molecule import isComplementary
-from molecule import nothing
+from .molecule import isComplementary
+from .molecule import nothing
 
 ##
 # Return number of bases to bind with main chain 0

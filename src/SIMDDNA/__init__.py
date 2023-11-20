@@ -1,3 +1,3 @@
-import ascii as ascii
-import molecule as molecule
-import register as register
+from . import ascii as ascii
+from . import molecule as molecule
+from . import register as register
