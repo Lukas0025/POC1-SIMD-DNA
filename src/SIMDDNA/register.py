@@ -26,28 +26,33 @@ class Register:
     # @param mol molecule reprezenting register
     #
     def instruction(self, IMols):
-        for mol in IMols:
-            # try bind mol to all possible bindings
-            self.doAllBinding(mol)
+        # @todo: while chainging
+        for _ in range(20):
+            for mol in IMols:
+                # try bind mol to all possible bindings
+                self.doAllBinding(mol)
 
-            # remove unbinded chains from register (because new imol have bind on older chain with more bases that register)
-            # ---
-            # |||
-            # ---
-            #
-            # ---- R
-            self.removeUnbinded()
+            for mol in IMols:
+                # remove unbinded chains from register (because new imol have bind on older chain with more bases that register)
+                # ---
+                # |||
+                # ---
+                #
+                # ---- R
+                self.removeUnbinded()
 
-            # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
-            # --
-            #
-            # ---
-            # |||
-            # ---- R
-            self.removeReplaced()
+            for mol in IMols:
+                # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
+                # --
+                #
+                # ---
+                # |||
+                # ---- R
+                self.removeReplaced()
 
-            # remove all unstable binded chains binded on 1 base or lower
-            self.removeUnstable()
+            for mol in IMols:
+                # remove all unstable binded chains binded on 1 base or lower
+                self.removeUnstable()
         
     ##
     # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
