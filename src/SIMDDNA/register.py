@@ -1,20 +1,61 @@
+##
+# @file register.py
+# @autor Lukáš Plevač <xpleva07@vutbr.cz>
+# @brief implments REGISTER from SIMD|DNA
+
 import molecule
 import ascii
 
 class Register:
+    ##
+    # Init register
+    # @param mol molecule reprezenting register
+    #
     def __init__(self, mol = molecule.Molecule()):
         self.set(mol)
 
+    ##
+    # set register molecule
+    # @param mol molecule reprezenting register
+    #
     def set(self, mol):
         self.mol = mol
 
-    def inscription(self, IMols):
+    ##
+    # Perform instruction on register
+    # @param mol molecule reprezenting register
+    #
+    def instruction(self, IMols):
         for mol in IMols:
+            # try bind mol to all possible bindings
             self.doAllBinding(mol)
+
+            # remove unbinded chains from register (because new imol have bind on older chain with more bases that register)
+            # ---
+            # |||
+            # ---
+            #
+            # ---- R
             self.removeUnbinded()
+
+            # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
+            # --
+            #
+            # ---
+            # |||
+            # ---- R
             self.removeReplaced()
+
+            # remove all unstable binded chains binded on 1 base or lower
             self.removeUnstable()
         
+    ##
+    # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
+    # --
+    #
+    # ---
+    # |||
+    # ---- R
     def removeReplaced(self):
         while True:
             done = True
@@ -38,6 +79,13 @@ class Register:
             if done:
                 break
 
+    ##
+    # remove unbinded chains from register (because new imol have bind on older chain with more bases that register)
+    # ---
+    # |||
+    # ---
+    #
+    # ---- R
     def removeUnbinded(self):
         while True:
             done = True
@@ -63,6 +111,8 @@ class Register:
             if done:
                 break
 
+    ##
+    # remove all unstable binded chains binded on 1 base or lower
     def removeUnstable(self):
         while True:
             done = True
@@ -71,11 +121,15 @@ class Register:
             for chainI in range(self.mol.chainsCount() - 1, 0, -1):
                 # for all bases in molecule
                 bindScore = 0
+                finalBindScore = 0
                 for pos in range(len(self.mol)):
                     if molecule.isComplementary(self.mol.getBase(chainI, pos), self.mol.getBase(0, pos)) and self.mol.bindedCountAt(pos) == 1: # binde minimaly once
                         bindScore += 1
+                    else:
+                        bindScore = 0
+                        finalBindScore = max(finalBindScore, bindScore)
 
-                if bindScore < 2:
+                if finalBindScore < 2:
                     self.mol.removeChain(chainI)
                     done = False
                     break
@@ -84,6 +138,10 @@ class Register:
             if done:
                 break
 
+    ##
+    # try bind mol to all possible bindings
+    # Added all imol bindings as new chains
+    # do not chech if other chain is ocupation this postion
     def doAllBinding(self, imol):
         # for all chains in register
         for chainI in range(self.mol.chainsCount()):
@@ -108,73 +166,12 @@ class Register:
                     self.mol.chain2chain(chain, imol.getChain(0))
                     self.mol.endPad()
     
+    ##
+    # Show register with raw print molecule
     def show(self):
         return self.mol.rawPrint()
 
+    ##
+    # Show register with ascii reprezentation of molecule
     def asciiShow(self, spaceing = ""):
         return ascii.showMolecule(self.mol, spaceing)
-
-
-print("---------------------------------")
-print("Before")
-print("---------------------------------\n")
-
-# create register
-num1 = "{A}[BCDE]"
-num0 = "[ABC][DE]"
-
-myreg = Register(molecule.parse(
-    num1 + num0 + num0 + num1 + num1 + num1 + num1 + num0 + num1 + num0
-))
-
-myreg.asciiShow()
-
-print("\n---------------------------------")
-print("After")
-print("---------------------------------\n")
-
-# do inscription
-# mark
-# myreg.inscription([
-#    molecule.parse("<A*B*C*D*E*>")
-# ])
-
-# do instruction
-# remove
-
-myreg.inscription([
-    molecule.parse("{D*E*A*F*}")
-])
-
-myreg.asciiShow(" ")
-
-myreg.inscription([
-    molecule.parse("{D*E*A*B*C*G*}")
-])
-
-myreg.asciiShow(" ")
-
-myreg.inscription([
-    molecule.parse("{DEABCG}")
-])
-
-myreg.asciiShow(" ")
-
-myreg.inscription([
-    molecule.parse("{A*B*C*}"),
-    molecule.parse("{D*E*}")
-])
-
-myreg.asciiShow(" ")
-
-myreg.inscription([
-    molecule.parse("{DEAF}")
-])
-
-myreg.asciiShow(" ")
-
-myreg.inscription([
-    molecule.parse("{B*C*D*E*}")
-])
-
-myreg.asciiShow(" ")

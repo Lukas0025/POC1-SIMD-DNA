@@ -1,6 +1,18 @@
+##
+# @file ascii.py
+# @autor Lukáš Plevač <xpleva07@vutbr.cz>
+# @brief defines function from print structions in ASCII reprezentation
+
 from molecule import isComplementary
 from molecule import nothing
 
+##
+# Return number of bases to bind with main chain 0
+# @param chainID id of chain in molecule
+# @param curPOS current position in molecule
+# @param molecule molecule with chain
+# @return int
+#
 def toBindingLen(chainID, curPOS, molecule):
     toBLen = 0
 
@@ -28,6 +40,18 @@ def toBindingLen(chainID, curPOS, molecule):
 
     return None
 
+##
+# Show molecule in ASCII reprezentation
+# [AB].{D}<CD>
+#
+#   /
+# -/
+# ----
+# ABCD
+#
+# @param molecule molecule to print
+# @param spacing chars between ascii chars
+#
 def showMolecule(molecule, spacing = ""):
     Invlines = [
         "", # register strand
