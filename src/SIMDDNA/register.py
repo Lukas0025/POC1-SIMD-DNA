@@ -53,7 +53,7 @@ class Register:
             for mol in IMols:
                 # remove all unstable binded chains binded on 1 base or lower
                 self.removeUnstable()
-        
+
     ##
     # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
     # --
@@ -61,6 +61,7 @@ class Register:
     # ---
     # |||
     # ---- R
+    #
     def removeReplaced(self):
         while True:
             done = True
@@ -91,6 +92,7 @@ class Register:
     # ---
     #
     # ---- R
+    #
     def removeUnbinded(self):
         while True:
             done = True
@@ -104,7 +106,8 @@ class Register:
                             if not(self.mol.getBase(chainIB, pos) == molecule.nothing and self.mol.getBase(chainIA, pos) == molecule.nothing):
                                 bindScore -= 1
 
-                    if bindScore == 0:
+                    # chack if strand have any free binding base to strap it
+                    if bindScore == 0 and self.haveChainFreeBaseFor(chainIA, chainIB) and self.haveChainFreeBaseFor(chainIB, chainIA):
                         self.mol.removeChain(max(chainIA, chainIB))
                         self.mol.removeChain(min(chainIA, chainIB))
                         done = False
@@ -123,7 +126,7 @@ class Register:
             done = True
             # for all chains in register
             # primary detach newer 
-            for chainI in range(self.mol.chainsCount() - 1, 0, -1):
+            for chainI in range(1, self.mol.chainsCount()):
                 # for all bases in molecule
                 bindScore = 0
                 finalBindScore = 0
@@ -142,6 +145,16 @@ class Register:
             
             if done:
                 break
+
+    def haveChainFreeBaseFor(self, chainA, chainB):
+        for baseID in range(len(self.mol)):
+            if molecule.isComplementary(self.mol.getBase(chainA, baseID), self.mol.getBase(chainB, baseID)):
+                if not molecule.isComplementary(self.mol.getBase(chainA, baseID), self.mol.getBase(0, baseID)):
+                    return True
+                elif self.mol.bindedCountAt(baseID) >= 2:
+                    return True
+                
+        return False
 
     ##
     # try bind mol to all possible bindings
