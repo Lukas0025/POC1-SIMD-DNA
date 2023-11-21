@@ -1,3 +1,9 @@
+#
+# RULE 110 cellular automaton implementation in DNA|SIMD
+# @autor Lukáš Plevač <xpleva07@vutbr.cz>
+# @date 11.21.2023
+#
+
 define:
     0 [ABC][DE]
     1 {A}[BCDE]
