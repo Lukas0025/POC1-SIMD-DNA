@@ -11,7 +11,7 @@ define:
 data:
     1001111010000
 
-instructions:
+instructions: # O(6)
     {E*A*B*F*}      # mark 10
     {D*E*A*B*C*G*}  # mark 11
     {DEABCG}        # remove mark 11

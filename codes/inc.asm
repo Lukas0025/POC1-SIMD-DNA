@@ -8,7 +8,7 @@ define:
     0 [ABC][DE]
     1 [AB][CDE]
 
-data:
+data: # O(6) + O(N)
     # {F} is TUE BINDING hold
     1011{F}
 

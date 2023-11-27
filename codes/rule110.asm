@@ -8,7 +8,7 @@ define:
     0 [ABC][DE]
     1 {A}[BCDE]
 
-data:
+data: # O(6)
     1001111010
 
 instructions:
