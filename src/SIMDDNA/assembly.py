@@ -60,15 +60,10 @@ class Assembly:
             elif ":" in ins and is_in:
                 break
             elif is_in:
-                reg = ins.split(" ")
-
-                if len(reg) > 1:
-                    print("WARNING: ASM parsing data molecule with space. All after space is ignored!")
-
-                reg = reg[0]
+                reg = self.useMacros(ins).replace(" ", "")
 
                 if not reg.isspace() and len(reg) > 0:
-                    datas.append(molecule.parse(self.useMacros(reg)))
+                    datas.append(molecule.parse(reg))
 
         return datas        
 
@@ -97,4 +92,14 @@ class Assembly:
                     gins.append(DNAInsArray)
 
         return gins     
+    
+    def decode(self, reg):
+        mol = molecule.encode(reg.mol)
+
+        for macro in self.macros:
+            mol = mol.replace(macro[1], macro[0])
+            
+        return mol
+
+
 

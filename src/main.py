@@ -69,4 +69,9 @@ for reg in regs:
 
 if args.decode:
     # todo: implement it
-    pass
+    print()
+    print("Decoded")
+    print("--------------------------------")
+    print()
+    for reg in regs:
+        print(asm.decode(reg))

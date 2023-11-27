@@ -327,3 +327,41 @@ def parse(notationStr):
     newMolecule.endPad()
 
     return newMolecule
+
+##
+# Encode molecule to ASCII reprezentation
+# @param mol moleculte to encode
+# @retun STR of ascii reprezentation
+# @todo support for overhangs
+#
+def encode(mol):
+    outstr = ""
+    lastClose = ""
+    lastChain = -1
+    lastBounded = None
+    
+    for basePos in range(len(mol)):
+        bounded = False
+        for chainID in range(1, mol.chainsCount()):
+            if isComplementary(mol.getBase(chainID, basePos), mol.getBase(0, basePos)):
+                if not lastBounded or lastBounded is None or lastChain != chainID:
+                    lastBounded  = True
+                    lastChain    = chainID
+                    outstr      += lastClose + "["
+                    lastClose    = "]"
+
+                bounded = True
+                break
+
+        if (not bounded and lastBounded) or lastBounded is None:
+            lastBounded = False
+            outstr     += lastClose + "{"
+            lastClose   = "}"
+
+        if mol.getBase(0, basePos) == nothing:
+            break
+
+        outstr += mol.getBase(0, basePos)
+
+    return (outstr + lastClose).replace("{}", "").replace("[]", "")
+                
