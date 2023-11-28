@@ -30,6 +30,7 @@ regs = []
 for data in asm.getData():
     regs.append(Register(data))
     regs[-1].asciiShow(spaceing = args.spaceing)
+    print("")
 
 
 iId = 0
@@ -55,6 +56,7 @@ for ins in asm.getInstructions():
         
         if args.verbose:
             reg.asciiShow(spaceing = args.spaceing)
+            print("")
 
     iId += 1
 
@@ -66,6 +68,7 @@ print("")
 
 for reg in regs:
     reg.asciiShow(spaceing = args.spaceing)
+    print("")
 
 if args.decode:
     # todo: implement it
