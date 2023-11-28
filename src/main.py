@@ -11,6 +11,7 @@ parser.add_argument('-s', '--spaceing', default=" ", help='space sentense betwee
 parser.add_argument('-v', '--verbose', help='show simulation step by step not only final', action='store_true', default=False)
 parser.add_argument('-d', '--decode', help='use macros to decode final result', action='store_true', default=False)
 parser.add_argument('-c', '--comments', help='show comments for instructions', action='store_true', default=False)
+parser.add_argument('-b', '--break_i', help='stop on Instruction ID', type=int, default=None)
 
 args = parser.parse_args()
 
@@ -62,6 +63,10 @@ for ins in asm.getInstructions():
         if args.verbose:
             reg.asciiShow(spaceing = args.spaceing)
             print("")
+
+    if args.break_i is not None:
+        if iId >= args.break_i:
+            break
 
     iId += 1
 
