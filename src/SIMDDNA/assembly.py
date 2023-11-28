@@ -74,6 +74,10 @@ class Assembly:
         gins = []
         for ins in asm:
             ins = re.sub("\s+" , " ", ins.strip()) # remove whitespaces
+            com = ""
+            if len(ins.split("#")) > 1:
+                com = ins.split("#")[1]
+            
             ins = ins.split("#")[0] # remove comments
             
             if "instructions:" in ins:
@@ -89,9 +93,12 @@ class Assembly:
                         DNAInsArray.append(molecule.parse(self.useMacros(DNAin)))
 
                 if len(DNAInsArray) > 0:
-                    gins.append(DNAInsArray)
+                    gins.append({
+                        "ins":     DNAInsArray,
+                        "comment": com
+                    })
 
-        return gins     
+        return gins  
     
     def decode(self, reg):
         mol = molecule.encode(reg.mol)

@@ -6,8 +6,8 @@
 
 define:
     #   BIT     NOT selector
-    0 [ABC][DE][NSE]
-    1 [ABCD]{E}[NSE]
+    0 [ABC][DE][NSE].<U*>
+    1 [ABCD]{E}[NSE].<U*>
     NO [ABC][DE]{NSE}
     Nl [ABCD]{E}{NSE}
 
@@ -26,4 +26,4 @@ instructions: # O(12)
     {CDEN}             # remove write 0 mark
     {NSEG}             # remove unwraper
     {A*B*C*} {D*E*}    # write 0
-    {N*S*E*}           # lock all NOT selectors
+    {N*S*E*U*}         # lock all NOT selectors

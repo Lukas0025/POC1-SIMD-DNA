@@ -10,6 +10,7 @@ parser.add_argument('assembly')
 parser.add_argument('-s', '--spaceing', default=" ", help='space sentense between ascii char of DNA strands')
 parser.add_argument('-v', '--verbose', help='show simulation step by step not only final', action='store_true', default=False)
 parser.add_argument('-d', '--decode', help='use macros to decode final result', action='store_true', default=False)
+parser.add_argument('-c', '--comments', help='show comments for instructions', action='store_true', default=False)
 
 args = parser.parse_args()
 
@@ -43,7 +44,11 @@ for ins in asm.getInstructions():
         print("=================================")
         print()
 
-        for insc in ins:
+        if args.comments:
+            print("#%s" % ins["comment"])
+            print("")
+
+        for insc in ins["ins"]:
             insc.rawPrint()
 
         print()
@@ -52,7 +57,7 @@ for ins in asm.getInstructions():
         print()
 
     for reg in regs:
-        reg.instruction(ins)
+        reg.instruction(ins["ins"])
         
         if args.verbose:
             reg.asciiShow(spaceing = args.spaceing)
