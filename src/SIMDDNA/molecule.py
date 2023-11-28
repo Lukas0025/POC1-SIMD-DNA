@@ -332,12 +332,11 @@ def parse(notationStr):
 # Encode molecule to ASCII reprezentation
 # @param mol moleculte to encode
 # @retun STR of ascii reprezentation
-# @todo support for overhangs
 #
 def encode(mol):
     outstr = ""
     lastClose = ""
-    lastChain = -1
+    lastChain = None
     lastBounded = None
     
     for basePos in range(len(mol)):
@@ -345,17 +344,62 @@ def encode(mol):
         for chainID in range(1, mol.chainsCount()):
             if isComplementary(mol.getBase(chainID, basePos), mol.getBase(0, basePos)):
                 if not lastBounded or lastBounded is None or lastChain != chainID:
+                    # read post overhangs
+                    postoverhang = ""
+                    if lastChain is not None:
+                        i = basePos
+                        while i < len(mol):
+                            if mol.getBase(lastChain, i) != nothing:
+                                postoverhang += mol.getBase(lastChain, i)
+                                i += 1
+                                continue
+
+                            break
+
+                        if len(postoverhang) > 0:
+                            postoverhang = f".<{postoverhang}>"
+
+                    # read pre overhangs
+                    overhang = ""
+                    i = basePos
+                    while i > 0:
+                        i -= 1
+                        if mol.getBase(chainID, i) != nothing:
+                            overhang += mol.getBase(chainID, i)
+                            continue
+
+                        break
+
+                    if len(overhang) > 0:
+                        overhang = f"<{overhang[::-1]}>."
+                    
                     lastBounded  = True
                     lastChain    = chainID
-                    outstr      += lastClose + "["
+                    outstr      += lastClose + postoverhang + overhang + "["
                     lastClose    = "]"
 
                 bounded = True
                 break
 
         if (not bounded and lastBounded) or lastBounded is None:
+            # read post overhangs
+            overhang = ""
+            if lastChain is not None:
+                i = basePos
+                while i < len(mol):
+                    if mol.getBase(lastChain, i) != nothing:
+                        overhang += mol.getBase(lastChain, i)
+                        i += 1
+                        continue
+
+                    break
+
+                if len(overhang) > 0:
+                    overhang = f".<{overhang}>"
+
             lastBounded = False
-            outstr     += lastClose + "{"
+            lastChain   = None
+            outstr     += lastClose + overhang + "{"
             lastClose   = "}"
 
         if mol.getBase(0, basePos) == nothing:
