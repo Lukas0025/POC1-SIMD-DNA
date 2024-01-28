@@ -6,6 +6,8 @@
 from . import molecule
 from . import ascii
 
+from joblib import Parallel, delayed
+
 class Register:
     ##
     # Init register
@@ -27,6 +29,9 @@ class Register:
     #
     def instruction(self, IMols):
         # @todo: while chainging
+        Parallel(n_jobs=4)(delayed(self.insDo)(IMols) for _ in range(4))
+        
+    def insDo(self, IMols):
         for _ in range(20):
             for mol in IMols:
                 # try bind mol to all possible bindings
