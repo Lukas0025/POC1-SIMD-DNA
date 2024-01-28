@@ -5,6 +5,8 @@ from SIMDDNA.assembly import Assembly
 from SIMDDNA.ascii    import showMolecule
 import argparse
 
+from joblib import Parallel, delayed
+
 parser = argparse.ArgumentParser(description='DNA|SIMD python simulator POC1')
 parser.add_argument('assembly')
 parser.add_argument('-s', '--spaceing', default=" ", help='space sentense between ascii char of DNA strands')
@@ -57,10 +59,10 @@ for ins in asm.getInstructions():
         print("--------------------------------")
         print()
 
-    for reg in regs:
-        reg.instruction(ins["ins"])
-        
-        if args.verbose:
+    regs = Parallel(n_jobs=max(len(regs), 4))(delayed(reg.instruction)(ins["ins"]) for reg in regs)
+    
+    if args.verbose:
+        for reg in regs:
             reg.asciiShow(spaceing = args.spaceing)
             print("")
 

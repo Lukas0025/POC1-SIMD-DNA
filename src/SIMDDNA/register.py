@@ -29,9 +29,6 @@ class Register:
     #
     def instruction(self, IMols):
         # @todo: while chainging
-        Parallel(n_jobs=4)(delayed(self.insDo)(IMols) for _ in range(4))
-        
-    def insDo(self, IMols):
         for _ in range(20):
             for mol in IMols:
                 # try bind mol to all possible bindings
@@ -58,6 +55,9 @@ class Register:
             for mol in IMols:
                 # remove all unstable binded chains binded on 1 base or lower
                 self.removeUnstable()
+
+        return self
+
 
     ##
     # remove unbinded chains from register (because new imol have bind on more posisin on register that older)
